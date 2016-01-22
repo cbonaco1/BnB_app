@@ -19657,11 +19657,12 @@
 	var ApiActions = __webpack_require__(160);
 	
 	ApiUtil = {
-	  fetchBenches: function () {
+	  fetchBenches: function (bounds) {
 	    //make AJAX call to fetch all benches
 	    $.ajax({
 	      type: "GET",
 	      url: "/api/benches",
+	      data: bounds,
 	      dataType: "json",
 	      success: function (data) {
 	        ApiActions.receiveAll(data);
@@ -26542,8 +26543,15 @@
 	    };
 	    this.map = new google.maps.Map(mapDOMNode, mapOptions);
 	    this.map.addListener('idle', function (e) {
-	      ApiUtils.fetchBenches();
-	    });
+	      var bounds = this.map.getBounds();
+	      var northEast = bounds.getNorthEast();
+	      var southWest = bounds.getSouthWest();
+	
+	      ApiUtils.fetchBenches({
+	        "northEast": { "lat": northEast.lat(), "lng": northEast.lng() },
+	        "southWest": { "lat": southWest.lat(), "lng": southWest.lng() }
+	      });
+	    }.bind(this));
 	  },
 	
 	  componentWillUnmount: function () {
@@ -26552,13 +26560,13 @@
 	
 	  makeMarks: function () {
 	    var benches = BenchStore.all();
-	    benches.forEach(function (bench) {
-	      var pos = new google.maps.LatLng(bench.lat, bench.lng);
-	      var marker = new google.maps.Marker({
-	        position: pos,
-	        map: this.map
-	      });
-	    }.bind(this));
+	    // benches.forEach(function(bench){
+	    //   var pos = new google.maps.LatLng(bench.lat, bench.lng);
+	    //   var marker = new google.maps.Marker({
+	    //     position: pos,
+	    //     map: this.map
+	    //   });
+	    // }.bind(this));
 	  },
 	
 	  render: function () {
