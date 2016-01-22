@@ -1,0 +1,21 @@
+{
+  "name": "bnb",
+  "version": "1.0.0",
+  "description": "== README",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "flux": "^2.1.1",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "webpack": "^1.12.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
