@@ -44,9 +44,13 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var ReactDOM = __webpack_require__(184);
+	var React = __webpack_require__(28);
 	var ApiUtils = __webpack_require__(1);
 	var BenchStore = __webpack_require__(9);
 	var Index = __webpack_require__(27);
+
+	ReactDOM.render(React.createElement(Index, null), document.findElementById("content"));
 
 /***/ },
 /* 1 */
@@ -6997,9 +7001,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(28);
+	var BenchStore = __webpack_require__(9);
+	var ApiUtils = __webpack_require__(1);
 
 	var Index = React.createClass({
-	  displayName: 'Index'
+	  displayName: 'Index',
+
+	  getInitialState: function () {
+	    return { benches: BenchStore.all() };
+	  },
+
+	  getBenches: function () {
+	    this.setState({ benches: BenchStore.all() });
+	  },
+
+	  componentWillMount: function () {
+	    this.listenerToken = BenchStore.addListener(this.getBenches);
+	    ApiUtils.fetchBenches();
+	  },
+
+	  render: function () {}
 	});
 
 /***/ },
@@ -26490,6 +26511,15 @@
 
 	module.exports = deprecated;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(30);
+
 
 /***/ }
 /******/ ]);
