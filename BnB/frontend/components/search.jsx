@@ -8,9 +8,11 @@ var Search = React.createClass({
   render: function() {
     return(
       <div>
-        // <Index />
+        <Index />
         <Map />
       </div>
     );
   }
 });
+
+module.exports = Search;

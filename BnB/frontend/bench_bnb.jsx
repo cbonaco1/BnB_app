@@ -6,5 +6,5 @@ var Search = require('./components/search');
 var Map = require('./components/map');
 
 document.addEventListener("DOMContentLoaded", function (e) {
-  ReactDOM.render(<Map />, document.getElementById("content"));
+  ReactDOM.render(<Search />, document.getElementById("content"));
 });

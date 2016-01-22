@@ -52,7 +52,7 @@
 	var Map = __webpack_require__(185);
 	
 	document.addEventListener("DOMContentLoaded", function (e) {
-	  ReactDOM.render(React.createElement(Map, null), document.getElementById("content"));
+	  ReactDOM.render(React.createElement(Search, null), document.getElementById("content"));
 	});
 
 /***/ },
@@ -20046,7 +20046,7 @@
 	      break;
 	  }
 	};
-	
+	window.BenchStore = BenchStore;
 	module.exports = BenchStore;
 
 /***/ },
@@ -26514,12 +26514,13 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      '// ',
 	      React.createElement(Index, null),
 	      React.createElement(Map, null)
 	    );
 	  }
 	});
+	
+	module.exports = Search;
 
 /***/ },
 /* 185 */
@@ -26533,12 +26534,31 @@
 	  displayName: 'Map',
 	
 	  componentDidMount: function () {
+	    this.listenerToken = BenchStore.addListener(this.makeMarks);
 	    var mapDOMNode = this.refs.map;
 	    var mapOptions = {
 	      center: { lat: 37.7758, lng: -122.435 },
 	      zoom: 13
 	    };
 	    this.map = new google.maps.Map(mapDOMNode, mapOptions);
+	    this.map.addListener('idle', function (e) {
+	      ApiUtils.fetchBenches();
+	    });
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  makeMarks: function () {
+	    var benches = BenchStore.all();
+	    benches.forEach(function (bench) {
+	      var pos = new google.maps.LatLng(bench.lat, bench.lng);
+	      var marker = new google.maps.Marker({
+	        position: pos,
+	        map: this.map
+	      });
+	    }.bind(this));
 	  },
 	
 	  render: function () {
@@ -26569,11 +26589,31 @@
 	
 	  componentWillMount: function () {
 	    this.listenerToken = BenchStore.addListener(this.getBenches);
-	    ApiUtils.fetchBenches();
+	    // ApiUtils.fetchBenches();
 	  },
 	
-	  render: function () {}
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  render: function () {
+	    var benches = this.state.benches.map(function (bench) {
+	      return React.createElement(
+	        'li',
+	        { key: bench.id },
+	        bench.description
+	      );
+	    });
+	
+	    return React.createElement(
+	      'ul',
+	      null,
+	      benches
+	    );
+	  }
 	});
+	
+	module.exports = Index;
 
 /***/ }
 /******/ ]);
