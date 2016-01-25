@@ -6,9 +6,10 @@ class Api::BenchesController < ApplicationController
 
   def create
     @bench = Bench.new(bench_params)
-    if @bench.save
-      debugger
-    end
+    @bench.save!
+    # if @bench.save
+    #   debugger
+    # end
   end
 
   private

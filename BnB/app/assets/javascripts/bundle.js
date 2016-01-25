@@ -47,13 +47,10 @@
 	var ReactDOM = __webpack_require__(1);
 	var React = __webpack_require__(147);
 	var ReactRouter = __webpack_require__(159);
-	// var Router = ReactRouter.Router;
-	// var Route = ReactRouter.Route;
-	// var IndexRoute = ReactRouter.IndexRoute;
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
 	var IndexRoute = ReactRouter.IndexRoute;
-	// var HashHistory = ReactRouter.History;
+	var History = ReactRouter.History;
 	var Search = __webpack_require__(206);
 	var BenchForm = __webpack_require__(234);
 	
@@ -24035,12 +24032,19 @@
 	var Search = React.createClass({
 	  displayName: 'Search',
 	
+	  mapClickHandler: function (coords) {
+	    //not completely sure how this works
+	    //Guess is that children inherit props from their parent
+	    //and since Search is a child of App, and App has History
+	    this.props.history.pushState(null, 'benches/new', coords);
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(Index, null),
-	      React.createElement(Map, null)
+	      React.createElement(Map, { mapClickHandler: this.mapClickHandler })
 	    );
 	  }
 	});
@@ -30918,6 +30922,7 @@
 	var React = __webpack_require__(147);
 	var BenchStore = __webpack_require__(207);
 	var ApiUtils = __webpack_require__(230);
+	// var History = require('react-router').History;
 	
 	var Map = React.createClass({
 	  displayName: 'Map',
@@ -30941,6 +30946,14 @@
 	          "northEast": { "lat": northEast.lat(), "lng": northEast.lng() },
 	          "southWest": { "lat": southWest.lat(), "lng": southWest.lng() }
 	        } });
+	    }.bind(this));
+	
+	    //Call clickHanlder passed as prop from Search parent
+	    this.map.addListener('click', function (e) {
+	      // console.log(e.latLng.lat());
+	      // console.log(e.latLng.lng());
+	      var coords = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+	      this.props.mapClickHandler(coords);
 	    }.bind(this));
 	  },
 	
@@ -31044,28 +31057,43 @@
 	  },
 	
 	  render: function () {
+	    // debugger
+	    var lat = "";
+	    var lng = "";
+	
+	    if (this.props.location.query) {
+	      lat = parseFloat(this.props.location.query.lat);
+	      lng = parseFloat(this.props.location.query.lng);
+	    }
+	
 	    return React.createElement(
 	      'form',
-	      { onSubmit: this.sendNewBench },
+	      { className: 'new-bench-form', onSubmit: this.sendNewBench },
 	      React.createElement(
 	        'label',
 	        null,
 	        'Latitude:',
-	        React.createElement('input', { type: 'text', onChange: this.handleChange.bind(this, "lat") })
+	        React.createElement('input', { className: 'new-bench-field', type: 'text', onChange: this.handleChange.bind(this, "lat"),
+	          value: lat })
 	      ),
 	      React.createElement(
 	        'label',
 	        null,
 	        'Longitude:',
-	        React.createElement('input', { type: 'text', onChange: this.handleChange.bind(this, "lng") })
+	        React.createElement('input', { className: 'new-bench-field', type: 'text', onChange: this.handleChange.bind(this, "lng"),
+	          value: lng })
 	      ),
 	      React.createElement(
 	        'label',
 	        null,
 	        'Description:',
-	        React.createElement('textarea', { onChange: this.handleChange.bind(this, "description") })
+	        React.createElement('textarea', { className: 'new-bench-field', onChange: this.handleChange.bind(this, "description") })
 	      ),
-	      React.createElement('input', { type: 'submit', value: 'Add Bench' })
+	      React.createElement(
+	        'button',
+	        null,
+	        'Add Bench'
+	      )
 	    );
 	  }
 	});

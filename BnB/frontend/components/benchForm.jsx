@@ -24,22 +24,34 @@ var BenchForm = React.createClass({
   },
 
   render: function() {
+    // debugger
+    var lat = "";
+    var lng = "";
+
+    if (this.props.location.query) {
+      lat = parseFloat(this.props.location.query.lat);
+      lng = parseFloat(this.props.location.query.lng);
+    }
+
+
     return(
-      <form onSubmit={this.sendNewBench}>
+      <form className="new-bench-form" onSubmit={this.sendNewBench}>
         <label>Latitude:
-          <input type="text" onChange={this.handleChange.bind(this, "lat")}/>
+          <input className="new-bench-field" type="text" onChange={this.handleChange.bind(this, "lat")}
+                  value={lat}/>
         </label>
 
         <label>Longitude:
-          <input type="text" onChange={this.handleChange.bind(this, "lng")}/>
+          <input className="new-bench-field" type="text" onChange={this.handleChange.bind(this, "lng")}
+                  value={lng}/>
         </label>
 
         <label>Description:
-          <textarea onChange={this.handleChange.bind(this, "description")}>
+          <textarea className="new-bench-field" onChange={this.handleChange.bind(this, "description")}>
           </textarea>
         </label>
 
-        <input type="submit" value="Add Bench" />
+        <button>Add Bench</button>
       </form>
     );
   }

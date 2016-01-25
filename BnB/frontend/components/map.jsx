@@ -1,6 +1,7 @@
 var React = require('react');
 var BenchStore = require('../stores/bench');
 var ApiUtils = require('../util/api_util');
+// var History = require('react-router').History;
 
 var Map = React.createClass({
 
@@ -24,6 +25,15 @@ var Map = React.createClass({
         "southWest": {"lat": southWest.lat(), "lng": southWest.lng()}
       }});
     }.bind(this));
+
+    //Call clickHanlder passed as prop from Search parent
+    this.map.addListener('click', function(e){
+      // console.log(e.latLng.lat());
+      // console.log(e.latLng.lng());
+      var coords = {lat: e.latLng.lat(), lng: e.latLng.lng() };
+      this.props.mapClickHandler(coords);
+    }.bind(this));
+
   },
 
   componentWillUnmount: function() {
