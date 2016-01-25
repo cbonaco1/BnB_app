@@ -15,8 +15,24 @@ ApiUtil = {
         alert("Error in fetchBenches");
       }
     });
+  },
 
+  createBench: function (bench) {
+    $.ajax({
+      type: "POST",
+      url: "/api/benches",
+      dataType: "json",
+      data: bench,
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(data) {
+        alert("Error in createBench");
+      }
+    });
   }
+
+
 };
 
 module.exports = ApiUtil;
