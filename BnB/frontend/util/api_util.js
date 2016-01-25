@@ -18,6 +18,7 @@ ApiUtil = {
   },
 
   createBench: function (bench) {
+    debugger
     $.ajax({
       type: "POST",
       url: "/api/benches",

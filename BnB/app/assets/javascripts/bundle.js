@@ -30889,6 +30889,7 @@
 	  },
 	
 	  createBench: function (bench) {
+	    debugger;
 	    $.ajax({
 	      type: "POST",
 	      url: "/api/benches",
@@ -31065,7 +31066,7 @@
 	      lng = parseFloat(this.props.location.query.lng);
 	    }
 	
-	    return { lat: lat, lng: lng, description: "" };
+	    return { lat: lat, lng: lng, description: "", seating: 0 };
 	  },
 	
 	  componentDidMount: function () {
@@ -31081,8 +31082,8 @@
 	    var newLat = parseFloat(this.state.lat);
 	    var newLng = parseFloat(this.state.lng);
 	    var newDescription = this.state.description;
-	    var bench = { bench: { lat: newLat, lng: newLng, description: newDescription } };
-	
+	    var newSeats = parseInt(this.state.seating);
+	    var bench = { bench: { lat: newLat, lng: newLng, description: newDescription, seating: newSeats } };
 	    ApiUtil.createBench(bench);
 	  },
 	
@@ -31116,6 +31117,65 @@
 	        null,
 	        'Description:',
 	        React.createElement('textarea', { className: 'new-bench-field', onChange: this.handleChange.bind(this, "description") })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Number of Seats:',
+	        React.createElement(
+	          'select',
+	          { className: 'new-bench-field', onChange: this.handleChange.bind(this, "seating") },
+	          React.createElement(
+	            'option',
+	            null,
+	            '1'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '2'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '3'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '4'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '5'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '6'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '7'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '8'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '9'
+	          ),
+	          React.createElement(
+	            'option',
+	            null,
+	            '10'
+	          )
+	        )
 	      ),
 	      React.createElement(
 	        'button',

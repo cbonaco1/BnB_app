@@ -13,7 +13,7 @@ var BenchForm = React.createClass({
       lng = parseFloat(this.props.location.query.lng);
     }
 
-    return {lat: lat, lng: lng, description: ""};
+    return {lat: lat, lng: lng, description: "", seating: 0};
   },
 
   componentDidMount: function() {
@@ -30,8 +30,8 @@ var BenchForm = React.createClass({
     var newLat = parseFloat(this.state.lat);
     var newLng = parseFloat(this.state.lng);
     var newDescription = this.state.description;
-    var bench = {bench: {lat: newLat, lng: newLng, description: newDescription} };
-
+    var newSeats = parseInt(this.state.seating);
+    var bench = {bench: {lat: newLat, lng: newLng, description: newDescription, seating: newSeats} };
     ApiUtil.createBench(bench);
   },
 
@@ -58,6 +58,21 @@ var BenchForm = React.createClass({
         <label>Description:
           <textarea className="new-bench-field" onChange={this.handleChange.bind(this, "description")}>
           </textarea>
+        </label>
+
+        <label>Number of Seats:
+          <select className="new-bench-field" onChange={this.handleChange.bind(this, "seating")}>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+          </select>
         </label>
 
         <button>Add Bench</button>
