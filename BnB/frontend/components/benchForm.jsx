@@ -1,11 +1,29 @@
 var React = require('react');
 var ApiUtil = require('../util/api_util');
+var BenchStore = require('../stores/bench');
 
 var BenchForm = React.createClass({
 
   getInitialState: function() {
-    return {lat: null, lng: null, description: ""};
+    var lat = "";
+    var lng = "";
+
+    if ((this.props.location.query.lat) && (this.props.location.query.lng) ) {
+      lat = parseFloat(this.props.location.query.lat);
+      lng = parseFloat(this.props.location.query.lng);
+    }
+
+    return {lat: lat, lng: lng, description: ""};
   },
+
+  componentDidMount: function() {
+    this.listenerToken = BenchStore.addListener(this.newBench);
+  },
+
+  newBench: function () {
+    this.props.history.pushState(null, '/', {});
+  },
+
 
   sendNewBench: function(e) {
     e.preventDefault();
@@ -24,26 +42,17 @@ var BenchForm = React.createClass({
   },
 
   render: function() {
-    // debugger
-    var lat = "";
-    var lng = "";
-
-    if (this.props.location.query) {
-      lat = parseFloat(this.props.location.query.lat);
-      lng = parseFloat(this.props.location.query.lng);
-    }
-
 
     return(
       <form className="new-bench-form" onSubmit={this.sendNewBench}>
         <label>Latitude:
           <input className="new-bench-field" type="text" onChange={this.handleChange.bind(this, "lat")}
-                  value={lat}/>
+                  value={this.state.lat}/>
         </label>
 
         <label>Longitude:
           <input className="new-bench-field" type="text" onChange={this.handleChange.bind(this, "lng")}
-                  value={lng}/>
+                  value={this.state.lng}/>
         </label>
 
         <label>Description:

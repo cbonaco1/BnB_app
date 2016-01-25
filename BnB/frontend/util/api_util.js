@@ -24,7 +24,8 @@ ApiUtil = {
       dataType: "json",
       data: bench,
       success: function(data) {
-        console.log(data);
+        // console.log(data);
+        ApiActions.receiveNewBench(data);
       },
       error: function(data) {
         alert("Error in createBench");

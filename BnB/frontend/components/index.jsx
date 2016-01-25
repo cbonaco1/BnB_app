@@ -26,7 +26,7 @@ var Index = React.createClass({
     });
 
     return(
-      <ul>
+      <ul className="bench-index">
         { benches }
       </ul>
     );

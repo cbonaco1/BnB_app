@@ -24070,10 +24070,19 @@
 	  _benches = benches;
 	};
 	
+	var addBench = function (bench) {
+	  _benches.push(bench);
+	  // debugger
+	};
+	
 	BenchStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case BenchConstants.BENCHES_RECEIVED:
 	      resetBenches(payload.benches);
+	      BenchStore.__emitChange();
+	      break;
+	    case BenchConstants.NEW_BENCH_CREATED:
+	      addBench(payload.bench);
 	      BenchStore.__emitChange();
 	      break;
 	  }
@@ -30850,7 +30859,8 @@
 
 	//wasnt var in docs
 	var BenchConstants = {
-	  BENCHES_RECEIVED: "BENCHES_RECEIVED"
+	  BENCHES_RECEIVED: "BENCHES_RECEIVED",
+	  NEW_BENCH_CREATED: "NEW_BENCH_CREATED"
 	};
 	
 	module.exports = BenchConstants;
@@ -30885,7 +30895,8 @@
 	      dataType: "json",
 	      data: bench,
 	      success: function (data) {
-	        console.log(data);
+	        // console.log(data);
+	        ApiActions.receiveNewBench(data);
 	      },
 	      error: function (data) {
 	        alert("Error in createBench");
@@ -30910,7 +30921,15 @@
 	      actionType: BenchConstants.BENCHES_RECEIVED,
 	      benches: benches
 	    });
+	  },
+	
+	  receiveNewBench: function (bench) {
+	    Dispatcher.dispatch({
+	      actionType: BenchConstants.NEW_BENCH_CREATED,
+	      bench: bench
+	    });
 	  }
+	
 	};
 	
 	module.exports = ApiActions;
@@ -31018,7 +31037,7 @@
 	
 	    return React.createElement(
 	      'ul',
-	      null,
+	      { className: 'bench-index' },
 	      benches
 	    );
 	  }
@@ -31032,12 +31051,29 @@
 
 	var React = __webpack_require__(147);
 	var ApiUtil = __webpack_require__(230);
+	var BenchStore = __webpack_require__(207);
 	
 	var BenchForm = React.createClass({
 	  displayName: 'BenchForm',
 	
 	  getInitialState: function () {
-	    return { lat: null, lng: null, description: "" };
+	    var lat = "";
+	    var lng = "";
+	
+	    if (this.props.location.query.lat && this.props.location.query.lng) {
+	      lat = parseFloat(this.props.location.query.lat);
+	      lng = parseFloat(this.props.location.query.lng);
+	    }
+	
+	    return { lat: lat, lng: lng, description: "" };
+	  },
+	
+	  componentDidMount: function () {
+	    this.listenerToken = BenchStore.addListener(this.newBench);
+	  },
+	
+	  newBench: function () {
+	    this.props.history.pushState(null, '/', {});
 	  },
 	
 	  sendNewBench: function (e) {
@@ -31057,14 +31093,6 @@
 	  },
 	
 	  render: function () {
-	    // debugger
-	    var lat = "";
-	    var lng = "";
-	
-	    if (this.props.location.query) {
-	      lat = parseFloat(this.props.location.query.lat);
-	      lng = parseFloat(this.props.location.query.lng);
-	    }
 	
 	    return React.createElement(
 	      'form',
@@ -31074,14 +31102,14 @@
 	        null,
 	        'Latitude:',
 	        React.createElement('input', { className: 'new-bench-field', type: 'text', onChange: this.handleChange.bind(this, "lat"),
-	          value: lat })
+	          value: this.state.lat })
 	      ),
 	      React.createElement(
 	        'label',
 	        null,
 	        'Longitude:',
 	        React.createElement('input', { className: 'new-bench-field', type: 'text', onChange: this.handleChange.bind(this, "lng"),
-	          value: lng })
+	          value: this.state.lng })
 	      ),
 	      React.createElement(
 	        'label',

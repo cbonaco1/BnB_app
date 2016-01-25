@@ -7,6 +7,7 @@ class Api::BenchesController < ApplicationController
   def create
     @bench = Bench.new(bench_params)
     @bench.save!
+    render json: @bench
     # if @bench.save
     #   debugger
     # end
