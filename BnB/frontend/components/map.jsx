@@ -12,15 +12,17 @@ var Map = React.createClass({
       zoom: 13
     };
     this.map = new google.maps.Map(mapDOMNode, mapOptions);
+
+    //After map has moved, get bounds of final moved location
     this.map.addListener('idle', function(e){
       var bounds = this.map.getBounds();
       var northEast = bounds.getNorthEast();
       var southWest = bounds.getSouthWest();
 
-      ApiUtils.fetchBenches({
+      ApiUtils.fetchBenches({"bounds": {
         "northEast": {"lat": northEast.lat(), "lng": northEast.lng()} ,
         "southWest": {"lat": southWest.lat(), "lng": southWest.lng()}
-      });
+      }});
     }.bind(this));
   },
 
@@ -30,13 +32,13 @@ var Map = React.createClass({
 
   makeMarks: function() {
     var benches = BenchStore.all();
-    // benches.forEach(function(bench){
-    //   var pos = new google.maps.LatLng(bench.lat, bench.lng);
-    //   var marker = new google.maps.Marker({
-    //     position: pos,
-    //     map: this.map
-    //   });
-    // }.bind(this));
+    benches.forEach(function(bench){
+      var pos = new google.maps.LatLng(bench.lat, bench.lng);
+      var marker = new google.maps.Marker({
+        position: pos,
+        map: this.map
+      });
+    }.bind(this));
   },
 
 

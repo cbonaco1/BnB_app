@@ -9,3 +9,5 @@ Bench.destroy_all();
 Bench.create!(description: "San Fran place", lat: 37.775785, lng: -122.445979);
 Bench.create!(description: "Sweet spot", lat: 37.772045, lng: -122.437015);
 Bench.create!(description: "Bachelor pad", lat: 37.781899, lng: -122.410426);
+
+Bench.create!(description: "App Academy", lat: 40.725024, lng: -73.996792);
